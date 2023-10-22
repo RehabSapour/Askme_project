@@ -1,0 +1,12 @@
+Do you think that Data structure is easy?
+1
+2
+Do you prefer cpp op java ?
+1
+2
+which your faculty?
+1
+2
+where are you from,nour?
+2
+1
