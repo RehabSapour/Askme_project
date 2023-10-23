@@ -12,14 +12,12 @@ struct User {
     string password;
     int id;
 };
-
 struct Ques {
     //three members
     string Q_text;
     int to_id;
     int from_id;
 };
-
 struct ans {
     //two members
     string Q;
@@ -47,7 +45,6 @@ public:
             cerr << "Failed to open " << filename <<endl;
             return;
         }
-
         User user;
         string line;
         int count = 1;
@@ -72,17 +69,14 @@ public:
             }
             count++;
         }
-
         user_data.close();
     }
- 
 void updatereadUserFile(const string& filename) {
         ifstream user_data(filename,ios::in);
         if (!user_data) {
             cerr << "Failed to open " << filename <<endl;
             return;
         }
-
         User user;
         string line;
         int count = 1;
@@ -111,14 +105,12 @@ void updatereadUserFile(const string& filename) {
 
         user_data.close();
     }
-
     void readQuestionsFile(const string& filename) {
         ifstream questions_data(filename);
         if (!questions_data) {
             cerr << "Failed to open " << filename << endl;
             return;
         }
-
         Ques question;
         string line;
         int count = 1;
@@ -135,18 +127,14 @@ void updatereadUserFile(const string& filename) {
                 count++;
             }
         }
-
         questions_data.close();
     }
-
-
-    void updatereadQuestionsFile(const string& filename) {
+      void updatereadQuestionsFile(const string& filename) {
         ifstream questions_data(filename);
-        if (!questions_data) {
+       if (!questions_data) {
             cerr << "Failed to open " << filename << endl;
             return;
         }
-
         Ques question;
         string line;
         int count = 1;
@@ -164,17 +152,14 @@ void updatereadUserFile(const string& filename) {
                 count++;
             }
         }
-
         questions_data.close();
     }
-
     void readAnswersFile(const string& filename) {
         ifstream answers_data(filename,ios::in);
         if (!answers_data) {
             cerr << "Failed to open " << filename << endl;
             return;
         }
-
         Ques answer;
         string line;
         int count = 1;
@@ -191,18 +176,14 @@ void updatereadUserFile(const string& filename) {
                 count++;
             }
         }
-
         answers_data.close();
     }
-
-
    void updatereadAnswersFile(const string& filename) {
         ifstream answers_data(filename,ios::in);
-        if (!answers_data) {
+       if (!answers_data) {
             cerr << "Failed to open " << filename << endl;
             return;
         }
-
         Ques answer;
         string line;
         int count = 1;
@@ -220,17 +201,14 @@ void updatereadUserFile(const string& filename) {
                 count++;
             }
         }
-
         answers_data.close();
     }
-
     void readQuesAnswFile(const string& filename) {
         ifstream qa_data(filename,ios::in);
         if (!qa_data) {
             cerr << "Failed to open " << filename <<endl;
             return;
         }
-
         ans qa;
        string line;
         int count = 1;
@@ -245,17 +223,14 @@ void updatereadUserFile(const string& filename) {
                 feed[qa.Q] = qa.A;
             }
         }
-
         qa_data.close();
     }
-
      void updatereadQuesAnswFile(const string& filename) {
         ifstream qa_data(filename,ios::in);
-        if (!qa_data) {
+       if (!qa_data) {
             cerr << "Failed to open " << filename <<endl;
             return;
         }
-
         ans qa;
           string line;
           int count = 1;
@@ -272,10 +247,8 @@ void updatereadUserFile(const string& filename) {
                 feed[qa.Q] = qa.A;
             }
         }
-
         qa_data.close();
     }
-
  //=========================== writting ================================//
 void write_user_data()
  {
@@ -318,9 +291,7 @@ void write_user_data()
  }
 
 };//end of first class
-
 //===========================================================================================
-
 class service:public Data
 {
   protected:
@@ -332,6 +303,10 @@ class service:public Data
   {
     string p;
     cout<<"Enter your username :\n"; cin>>Euser.username;
+    while(IsUsernameValid())
+    {
+      cout<<"Please Enter a Correct Username :\n"; cin>>Euser.username;
+    }
     cout<<"Enter your password :\n"; cin>> p;
     for(int i=0;i<users.size();i++){
        if(Euser.username==users[i].username){
@@ -348,7 +323,6 @@ class service:public Data
        cin>>p;
     }
   }
-
   void sign_up()
   {
     cin.ignore();
@@ -392,7 +366,6 @@ class service:public Data
 
     return false;
 }
-
  bool IsUsernameValid()
  {
     string user_name=Euser.username;
@@ -405,199 +378,279 @@ class service:public Data
     }
     return true;
  }
-
   void viewUsers()
   { 
     
      updatereadUserFile("user.txt");
      updatereadQuestionsFile("Ques.txt");
-     updatereadQuesAnswFile("Answer.txt");
+     updatereadAnswersFile("Answer.txt");
      updatereadQuesAnswFile("Ques_Answ.txt");
-    for(int i=0;i<users.size();i++){
+      for(int i=0;i<users.size();i++){
       cout<<"username : "<<users[i].username<<"   id : "<<users[i].id<<endl;
     }
   }
+ bool IsIdExist(int id)
+ {
+    for(int i=0;i<users.size();i++)
+    {
+        if(users[i].id==id)
+        {
+            return true;
+        }
+    }
+    return false;
+ }
 
-
-  void AskQestions()
-  {
-    updatereadUserFile("user.txt");
-     updatereadQuestionsFile("Ques.txt");
-     updatereadQuesAnswFile("Answer.txt");
-     updatereadQuesAnswFile("Ques_Answ.txt");
-    viewUsers();
-    int T;
-    string Q;
-    cout<<"Enter user id you want to ask: \n";
-    cin>>T;
-    cin.ignore();
-    cout<<"Enter your Question : \n";
-    getline(cin,Q);
-    Ques QE;  //* object of Ques struct
-    QE.from_id=Euser.id;
-    QE.to_id=T;
-    QE.Q_text=Q;
-     Questions.push_back(QE);
-    WriteQuestion();
-  }
-  void Q_from_me()
-  {
+void AskQuestions()
+{
      updatereadUserFile("user.txt");
      updatereadQuestionsFile("Ques.txt");
-     updatereadQuesAnswFile("Answer.txt");
+     updatereadAnswersFile("Answer.txt");
      updatereadQuesAnswFile("Ques_Answ.txt");
-    for(int i=0;i<Questions.size();i++)
-    {
-      if(Questions[i].from_id==Euser.id)
-      {
-        string s=Questions[i].Q_text;
-        cout<<"Question : "<<s<<"  to user id "<<Questions[i].to_id<<endl;
-        if(feed.find(s)!=feed.end())
-        {
-          cout<<"Answer : "<<feed[s]<<endl;
-        }
-        else{
-          cout<<"Unanswered yet\n";
-        }
-      }
-    
-    }
-  }
+  viewUsers();
+  int T;
+  string Q;
+  bool found = false;
+  cout << "Enter the user ID you want to ask: \n";
+  cin >> T;
 
-  void Q_to_me()
+  while (!found)
   {
-
-      updatereadUserFile("user.txt");
-     updatereadQuestionsFile("Ques.txt");
-     updatereadQuesAnswFile("Answer.txt");
-     updatereadQuesAnswFile("Ques_Answ.txt");
-    int x=0;
-    for(int i=0; i<Questions.size();i++)
+    if (T == Euser.id)
     {
-      x++;
+      cout << "Sorry, you can't ask yourself. Please enter a different user ID: \n";
+      cin >> T;
     }
-
-    if(x==0)
+    else if (!IsIdExist(T))
     {
-      cout<<"Don't have any questions yet\n";
+      cout << "This user is not found. Please enter a valid user ID: \n";
+      cin >> T;
     }
     else
     {
-      for(int i=0; i<Questions.size();i++)
+      found = true;
+    }
+  }
+
+  cin.ignore();
+  cout << "Enter your question: \n";
+  getline(cin, Q);
+
+  Ques QE;  // object of Ques struct
+  QE.from_id = Euser.id;
+  QE.to_id = T;
+  QE.Q_text = Q;
+  Questions.push_back(QE);
+  WriteQuestion();
+}
+
+  void Q_from_me()
+{
+     updatereadUserFile("user.txt");
+     updatereadQuestionsFile("Ques.txt");
+     updatereadAnswersFile("Answer.txt");
+     updatereadQuesAnswFile("Ques_Answ.txt");
+
+  bool found = false;
+
+  for (int i = 0; i < Questions.size(); i++)
+  {
+    if (Questions[i].from_id == Euser.id)
+    {
+      found = true; 
+
+      string s = Questions[i].Q_text;
+      cout << "Question from user ID ("<<Questions[i].from_id <<") : "<< s << "  to user ID " << Questions[i].to_id << endl;
+
+      if (feed.find(s) != feed.end())
       {
-        if(Questions[i].to_id==Euser.id)
-        {
-          cout<<"Question : "<<Questions[i].Q_text<<" from user id "<<Questions[i].from_id<<endl;
-          string s=Questions[i].Q_text;
-          if(feed.find(s)!=feed.end())
-          {
-            cout<<" You Answered :"<<feed[s]<<endl;
-          }
-          else
-          {
-            cout<<"Not answered yet \n";
-          }
-        }
+        cout << "Answer: " << feed[s] << endl;
+      }
+      else
+      {
+        cout << "Unanswered yet\n";
       }
     }
-
   }
 
+  if (!found)
+  {
+    cout << "There are no questions from you.\n";
+  }
+}
+
+void Q_to_me()
+{
+     updatereadUserFile("user.txt");
+     updatereadQuestionsFile("Ques.txt");
+     updatereadAnswersFile("Answer.txt");
+     updatereadQuesAnswFile("Ques_Answ.txt");
+
+  int count = 0; 
+  for (int i = 0; i < Questions.size(); i++)
+  {
+    if (Questions[i].to_id == Euser.id)
+    {
+      count++; 
+      cout << "Question To You : " << Questions[i].Q_text << " from user ID " << Questions[i].from_id << endl;
+      string s = Questions[i].Q_text;
+
+      if (feed.find(s) != feed.end())
+      {
+        cout << "You Answered: " << feed[s] << endl;
+      }
+      else
+      {
+        cout << "Not answered yet\n";
+      }
+    }
+  }
+
+  if (count == 0)
+  {
+    cout << "Don't have any questions yet\n";
+  }
+}
 void AnswerQuestion()
-  {
-   
+{
      updatereadUserFile("user.txt");
      updatereadQuestionsFile("Ques.txt");
-     updatereadQuesAnswFile("Answer.txt");
+     updatereadAnswersFile("Answer.txt");
      updatereadQuesAnswFile("Ques_Answ.txt");
-    for(int i=0;i<Questions.size();i++)
-     {
-         if(Questions[i].to_id==Euser.id){
-        cout<<"Question "<<i+1<<":"<<Questions[i].Q_text<<endl;
-        string s=Questions[i].Q_text;
-        if(feed.find(s)!=feed.end())
-        {
-          cout<<"answer :"<<feed[s]<<" by user id :"<<Questions[i].to_id<<endl;
-         }
-        else{
-          cout<<"Not answered yet\n";
-          
-        }
-         }
+    bool found = false;
+  for (int i = 0; i < Questions.size(); i++)
+  {
+    if (Questions[i].to_id == Euser.id)
+    {
+      found = true; 
+      cout << "Question ID (" << i + 1 <<") : " << Questions[i].Q_text << endl;
+      string s = Questions[i].Q_text;
 
-     }
-     //else{
-    int num;
-    cout<<"Enter the Question number you want to answer :\n";
-    cin>>num;
-   
-    num--;
-    ans ob;
-    ob.Q=Questions[num].Q_text;
-    cout<<"Answer :";
-    string Answ;
-    cin.ignore();
-    getline(cin,Answ);
-    ob.A=Answ;
-
-    int p=Questions[num].from_id;
-    Ques r;
-    r.Q_text=ob.A;
-    r.to_id=p;
-    r.from_id=Euser.id;
-
-    string Q=Questions[num].Q_text;
-    feed[Q]=ob.A;
-
-    answers.push_back(r);
-    WriteAnswers();
-    QuesWithAns.push_back(ob);
-    write_Question_Answers();
+      if (feed.find(s) != feed.end())
+      {
+        cout << "Answer: " << feed[s] << "  by user ID: " << Questions[i].to_id << endl;
+      }
+      else
+      {
+        cout << "Not answered yet\n";
+      }
+    }
   }
 
-    void remove()
+  if (!found)
   {
+    cout << "You don't have any questions.\n";
+    return;
+  }
+  int num;
+  cout << "Enter the question ID you want to answer: ";
+  cin >> num;
+  num--;
+  if (num < 0 || num >= Questions.size()||Questions[num].to_id != Euser.id)
+  {
+    cout << "Invalid question number.\n";
+    return;
+  }
+
+  string questionText = Questions[num].Q_text;
+
+  if (feed.find(questionText) != feed.end())
+  {
+    cout << "Do you want to update your answer? (Y/N): ";
+    char choice;
+    cin >> choice;
+    if (choice == 'N' || choice == 'n')
+    {
+      cout << "Answer not updated.\n";
+      return;
+    }
+  }
+
+  cout << "Answer: ";
+  cin.ignore();
+  string answer;
+  getline(cin, answer);
+
+  feed[questionText] = answer;
+  ans ob;
+  ob.Q = questionText;
+  ob.A = answer;
+  QuesWithAns.push_back(ob);
+  write_Question_Answers();
+  Ques r;
+  r.Q_text = answer;
+  r.to_id = Questions[num].from_id;
+  r.from_id = Euser.id;
+  answers.push_back(r);
+  WriteAnswers();
+  cout << "Answer successfully added.\n";
+}
+
+void remove()
+{
      updatereadUserFile("user.txt");
      updatereadQuestionsFile("Ques.txt");
-     updatereadQuesAnswFile("Answer.txt");
+     updatereadAnswersFile("Answer.txt");
      updatereadQuesAnswFile("Ques_Answ.txt");
-     int number;
-     cout<<"select question number you want to remove : \n";
-     for(int i=0;i<Questions.size();i++)
-     {
-      if(Questions[i].from_id==Euser.id)
-      {
-        cout<<"Question "<<i+1<<":"<<Questions[i].Q_text<<endl;
-        string s=Questions[i].Q_text;
-        if(feed.find(s)!=feed.end())
-        {
-          cout<<"answer :"<<feed[s]<<" by user id :"<<Questions[i].to_id<<endl;
-        }
-        else{
-          cout<<"Not answered yet\n";
-        }
-      }
-     }
 
-     cin>>number;
-     number--;
-     string Qe=Questions[number].Q_text;
-     for(int i=0;i<QuesWithAns.size();i++)
-     {
-      if(QuesWithAns[i].Q==Qe)
+  bool found = false; // Flag to check if there are questions asked by you
+
+  for (int i = 0; i < Questions.size(); i++)
+  {
+    if (Questions[i].from_id == Euser.id)
+    {
+      found = true; // There is at least one question asked by you
+
+      cout << "Question ID (" << i + 1 << ") : " << Questions[i].Q_text << endl;
+      string s = Questions[i].Q_text;
+
+      if (feed.find(s) != feed.end())
       {
-        QuesWithAns.erase(QuesWithAns.begin()+1);
+        cout << "Answer: " << feed[s] << "  by user ID: " << Questions[i].to_id << endl;
       }
-     }
-     feed.erase(Qe);
-     Questions.erase(Questions.begin()+number);
-     answers.erase(answers.begin()+number);
-     QuesWithAns.erase(QuesWithAns.begin()+number);
-     WriteQuestion();
-     write_Question_Answers();
-     WriteAnswers();
+      else
+      {
+        cout << "Not answered yet\n";
+      }
+    }
+  }
+  if (!found)
+  {
+    cout << "You don't have any questions to delete.\n";
+    return;
   }
 
+  int number;
+  cout << "Enter the question ID you want to remove: ";
+  cin >> number;
+
+  number--;
+
+  if (number < 0 || number >= Questions.size() || Questions[number].from_id != Euser.id)
+  {
+    cout << "Invalid question id or you don't have control to delete this Question. Please try again.\n";
+    return;
+  }
+  string questionText = Questions[number].Q_text;
+
+  for (int i = 0; i < QuesWithAns.size(); i++)
+  {
+    if (QuesWithAns[i].Q == questionText)
+    {
+      QuesWithAns.erase(QuesWithAns.begin() + i);
+      break;
+    }
+  }
+  feed.erase(questionText);
+  Questions.erase(Questions.begin() + number);
+  answers.erase(answers.begin() + number);
+
+  WriteQuestion();
+  write_Question_Answers();
+  WriteAnswers();
+
+  cout << "Question have been removed.\n";
+}
 
   void MENU()
   {
@@ -605,7 +658,7 @@ void AnswerQuestion()
     cout<<" \nMENU: ";
     cout<<"\n\n \t1-print question to me";
     cout<<"\n \t2-print question from me";
-    cout<<"\n \t3-Answer a question ";
+    cout<<"\n \t3-Answer a question or update Answer";
     cout<<"\n \t4-delete question ";
     cout<<"\n \t5-Ask question ";
     cout<<"\n \t6-List system users ";
@@ -618,28 +671,29 @@ int main()
 {
   service myservice;
   int test;
-
   do
   {
     cout << "Menu\t\t\t" << endl;
     cout << "1-Login \n";
     cout << "2-Sign up \n";
-    cout << "Enter number in range (1-2): ";
+    cout<<"3-exit \n";
+    cout << "Enter number in range (1-3): ";
+    in:
     cin >> test;
-
     switch (test)
     {
       case 1:
         myservice.Login();
-       // ob1.MENU();
         break;
       case 2:
         myservice.sign_up();
-       // ob1.MENU();
         break;
+      case 3:
+      exit(0);
       default:
         cout << "Invalid number... Try again.\n";
-        break;
+       goto in;
+       break;
     }
 
     while (true)
@@ -662,7 +716,7 @@ int main()
           myservice.remove();
           break;
         case 5:
-          myservice.AskQestions();
+          myservice.AskQuestions();
           break;
         case 6:
           myservice.viewUsers();
@@ -672,23 +726,37 @@ int main()
           cout << "Menu:\t\t\t" << endl;
           cout << "1-Login \n";
           cout << "2-sign up \n";
-          cout << "Enter number in range (1-2): ";
+          cout<< "3-Exit \n";
+          cout << "Enter number in range (1-3): ";
+          update:
           cin >> test;
           if (test == 1)
+          {
             myservice.Login();
-          else if (test == 2)
-            myservice.sign_up();
-          else
             break;
-        //  ob1.MENU();
+          }
+          else if (test == 2)
+          {
+            myservice.sign_up();
+            break;
+          }
+          else if (test == 3)
+          {
+            exit(0);
+          }
+          else
+           cout<<"Invalid test number..try again."<<endl;
+           goto update;
           break;
         case 8:
-          break;
+        {
+          cout <<" successful to exit \n";
+          exit(0);//break;
+        }
         default:
           cout << "Invalid number... Try again.\n";
           break;
       }
-
       if (test == 8)
         break;
     }
