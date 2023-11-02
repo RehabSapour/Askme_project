@@ -1,6 +1,6 @@
 # My ASKFM Project
-This project is a simplified form of Ask FM using some object-oriented programming concepts.
-This project was made using the C++ language and the file system.
+- This project is a simplified form of Ask FM using some object-oriented programming concepts.
+- This project was made using the C++ language and the file system.
 
 # Project Features:
 - Sign Up And Login
