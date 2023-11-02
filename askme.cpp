@@ -3,6 +3,7 @@
 #include <map>
 #include <string>
 #include <vector>
+ 
  using namespace std;
 struct User {
     //five members
@@ -35,10 +36,9 @@ public:
     Data() {
         readUserFile("user.txt");
         readQuestionsFile("Ques.txt");
-        readAnswersFile("Answer.txt");
-        readQuesAnswFile("Ques_Answ.txt");
+          readAnswersFile("Answer.txt");
+         readQuesAnswFile("Ques_Answ.txt");
     }//end of constructor
-
     void readUserFile(const string& filename) {
         ifstream user_data(filename,ios::in);
         if (!user_data) {
@@ -71,7 +71,7 @@ public:
         }
         user_data.close();
     }
-void updatereadUserFile(const string& filename) {
+       void updatereadUserFile(const string& filename) {
         ifstream user_data(filename,ios::in);
         if (!user_data) {
             cerr << "Failed to open " << filename <<endl;
@@ -105,7 +105,7 @@ void updatereadUserFile(const string& filename) {
 
         user_data.close();
     }
-    void readQuestionsFile(const string& filename) {
+     void readQuestionsFile(const string& filename) {
         ifstream questions_data(filename);
         if (!questions_data) {
             cerr << "Failed to open " << filename << endl;
@@ -298,9 +298,13 @@ class service:public Data
   User Euser;  //* object from User struct
 
   public:
-  service(){}
+  service(){ cout<<"******************************************************* Welcom To Askme System *****************************************************************\n";}
   void Login()
   {
+     updatereadUserFile("user.txt");
+     updatereadQuestionsFile("Ques.txt");
+     updatereadAnswersFile("Answer.txt");
+     updatereadQuesAnswFile("Ques_Answ.txt");
     string p;
     cout<<"Enter your username :\n"; cin>>Euser.username;
     while(IsUsernameValid())
@@ -325,6 +329,10 @@ class service:public Data
   }
   void sign_up()
   {
+     updatereadUserFile("user.txt");
+     updatereadQuestionsFile("Ques.txt");
+     updatereadAnswersFile("Answer.txt");
+     updatereadQuesAnswFile("Ques_Answ.txt");
     cin.ignore();
     cout<<"Enter Your name : \n"; getline(cin,Euser.name);// cin>>Euser.name;
 
@@ -586,20 +594,20 @@ void AnswerQuestion()
   cout << "Answer successfully added.\n";
 }
 
-void remove()
+void remove_question()
 {
      updatereadUserFile("user.txt");
      updatereadQuestionsFile("Ques.txt");
      updatereadAnswersFile("Answer.txt");
      updatereadQuesAnswFile("Ques_Answ.txt");
 
-  bool found = false; // Flag to check if there are questions asked by you
+  bool found = false; 
 
   for (int i = 0; i < Questions.size(); i++)
   {
     if (Questions[i].from_id == Euser.id)
     {
-      found = true; // There is at least one question asked by you
+      found = true;
 
       cout << "Question ID (" << i + 1 << ") : " << Questions[i].Q_text << endl;
       string s = Questions[i].Q_text;
@@ -648,23 +656,101 @@ void remove()
   WriteQuestion();
   write_Question_Answers();
   WriteAnswers();
+  
 
   cout << "Question have been removed.\n";
+}
+void remove_answere()
+{
+  updatereadUserFile("user.txt");
+  updatereadQuestionsFile("Ques.txt");
+  updatereadAnswersFile("Answer.txt");
+  updatereadQuesAnswFile("Ques_Answ.txt");
+
+  bool found = false;
+
+  for (int i = 0; i < Questions.size(); i++)
+  {
+    if (Questions[i].to_id == Euser.id && feed.find(Questions[i].Q_text) != feed.end())
+    {
+      found = true; 
+
+      cout << "Question ID (" << i + 1 << ") : " << Questions[i].Q_text << endl;
+      cout << "Answer: " << feed[Questions[i].Q_text] << " by user ID: " << Questions[i].to_id << endl;
+    }
+  }
+
+  if (!found)
+  {
+    cout << "You haven't answered any questions yet.\n";
+    return;
+  }
+
+  int questionId;
+  cout << "Enter the question ID for which you want to remove the answer: ";
+  cin >> questionId;
+
+  questionId--;
+
+  if (questionId < 0 || questionId >= Questions.size() || Questions[questionId].to_id != Euser.id ||
+      feed.find(Questions[questionId].Q_text) == feed.end())
+  {
+    cout << "Invalid question ID or you don't have an answer for this question. Please try again.\n";
+    return;
+  }
+
+  string questionText = Questions[questionId].Q_text;
+   for (int i = 0; i < QuesWithAns.size(); i++)
+  {
+    if (QuesWithAns[i].Q == questionText)
+    {
+      QuesWithAns.erase(QuesWithAns.begin() + i);
+      break;
+    }
+  }
+
+  feed.erase(questionText);
+  answers.erase(answers.begin() + questionId);
+  WriteQuestion();
+  write_Question_Answers();
+  WriteAnswers();
+  cout << "Answer for the question has been removed.\n";
+}
+
+void All_feed()
+{
+  updatereadUserFile("user.txt");
+   updatereadQuestionsFile("Ques.txt");
+   updatereadAnswersFile("Answer.txt");
+   updatereadQuesAnswFile("Ques_Answ.txt");
+
+  for (int i = 0; i < Questions.size(); i++)
+  {
+      string QuestionText = Questions[i].Q_text;
+
+      if (feed.find(QuestionText) != feed.end())
+      {
+        cout << "Question ID (" << i + 1 << ") : " << Questions[i].Q_text <<" from user ID ("<<Questions[i].from_id<<")"<< endl;
+        cout << "Answer: " << feed[QuestionText] << "  by user ID (" << Questions[i].to_id <<")"<< endl;
+      }
+  }
 }
 
   void MENU()
   {
-    cout<<"\n\n***** my systim services *****\n";
+    cout<<"************************************* System services *****************************************\n";
     cout<<" \nMENU: ";
-    cout<<"\n\n \t1-print question to me";
-    cout<<"\n \t2-print question from me";
-    cout<<"\n \t3-Answer a question or update Answer";
+    cout<<"\n\n \t1-print question to me ";
+    cout<<"\n \t2-print question from me ";
+    cout<<"\n \t3-Answer a question or update Answer ";
     cout<<"\n \t4-delete question ";
-    cout<<"\n \t5-Ask question ";
-    cout<<"\n \t6-List system users ";
-    cout<<"\n \t7-Logout ";
-    cout<<"\n \t8-exit \n";
-    cout<<"Enter number in range(1-8) : ";
+    cout<<"\n \t5-delete Answer ";
+    cout<<"\n \t6-Ask question ";
+    cout<<"\n \t7-List system users ";
+    cout<<"\n \t8-Feed ";
+    cout<<"\n \t9-Logout ";
+    cout<<"\n \t10-Exit ";
+    cout<<"\nEnter number in range(1-10) : ";
   }
 };
 int main()
@@ -673,10 +759,10 @@ int main()
   int test;
   do
   {
-    cout << "Menu\t\t\t" << endl;
-    cout << "1-Login \n";
-    cout << "2-Sign up \n";
-    cout<<"3-exit \n";
+    cout << "Menu :\t\t\t"<< endl;
+    cout << "\t1-Login \n";
+    cout << "\t2-Sign up \n";
+    cout <<"\t3-exit \n";
     cout << "Enter number in range (1-3): ";
     in:
     cin >> test;
@@ -695,11 +781,11 @@ int main()
        goto in;
        break;
     }
-
     while (true)
     {
       myservice.MENU();
       cin >> test;
+      cout<<"***********************************************************************************************\n";
 
       switch (test)
       {
@@ -713,20 +799,26 @@ int main()
           myservice.AnswerQuestion();
           break;
         case 4:
-          myservice.remove();
+          myservice.remove_question();
           break;
         case 5:
-          myservice.AskQuestions();
+          myservice.remove_answere();
           break;
         case 6:
-          myservice.viewUsers();
+          myservice.AskQuestions();
           break;
         case 7:
+           myservice.viewUsers();
+           break;
+        case 8:
+           myservice.All_feed();
+           break;
+        case 9:
           system("cls");
           cout << "Menu:\t\t\t" << endl;
-          cout << "1-Login \n";
-          cout << "2-sign up \n";
-          cout<< "3-Exit \n";
+          cout << "\t1-Login \n";
+          cout << "\t2-sign up \n";
+          cout<< "\t3-Exit \n";
           cout << "Enter number in range (1-3): ";
           update:
           cin >> test;
@@ -748,17 +840,18 @@ int main()
            cout<<"Invalid test number..try again."<<endl;
            goto update;
           break;
-        case 8:
+        case 10:
         {
-          cout <<" successful to exit \n";
+          cout <<" Successful To Exit \n";
           exit(0);//break;
         }
         default:
           cout << "Invalid number... Try again.\n";
           break;
       }
-      if (test == 8)
+      if (test == 10)
         break;
     }
-  } while (test != 8);
+  } while (test != 10);
+  return 0;
 }
