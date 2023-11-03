@@ -1,5 +1,5 @@
 # My ASKFM Project
-- This project is a simplified form of Ask FM using some object-oriented programming concepts.
+- This project is a simulatin of Ask FM using some object-oriented programming concepts.
 - This project was made using the C++ language and the file system.
 
 # Project Features:
@@ -16,6 +16,5 @@
 # Notes:
 - This System Supports more than One User at the Same Time .
 
-
-
+# I Hope You Give Me Your Feedback
 
